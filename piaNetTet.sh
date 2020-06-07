@@ -1,6 +1,5 @@
 #/bin/bash
 set -eo pipefail
-echo $(/bin/date)
 # Make changes to VPN connection based on network status.
 
 # TODO:  This script currently only cares about WiFi, should put effort into
@@ -34,14 +33,16 @@ CURRENTNET=$($AIRPORTCMD $INTERFACE -I|grep -v BSSID|grep SSID|xargs|cut -c7-)
 
 if [[ $LASTNET == $CURRENTNET ]]; then
 	# Don't do anything if a chance in the network has not occurred.
-	echo "Network state has not changed since last check."
 	exit 0
 else
 	# Only check on PIA status if a change in the network has occurred.
 	PIASTATUS=$($PIACMD get connectionstate)
-
+	
+	# Output information for the log.
+	echo $(/bin/date)
 	echo "Network state has changed since last check."
 	echo "Pinging $PINGTARGET to test Internet connectivity..."
+	
 	$PINGCMD &> /dev/null
 
 	if (( $? > 0)); then
