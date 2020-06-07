@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HOME</key>
+		<string>/Users/cyclops</string>
+		<key>PATH</key>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Applications/Keybase.app/Contents/SharedSupport/bin</string>
+	</dict>
+	<key>Label</key>
+	<string>piaNetTest</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>/Users/cyclops/Library/Mobile Documents/com~apple~CloudDocs/Scripts/piaNetTest.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StandardErrorPath</key>
+	<string>/Users/cyclops/Library/Logs/piaNetTest.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/cyclops/Library/Logs/piaNetTest.log</string>
+	<key>StartInterval</key>
+	<integer>300</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/cyclops/Library/Mobile Documents/com~apple~CloudDocs/Scripts</string>
+</dict>
+</plist>
