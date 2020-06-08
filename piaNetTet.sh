@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/zsh
 # Make changes to VPN connection based on network status.
 
 # How do we tell we are online?
@@ -26,7 +26,7 @@ fi
 # This file is required!  It is in the format of one network name per line
 # space in network names are not (yet) supported.
 if [[ -f piaNetTest.trusted ]]; then
-	TRUSTEDNETS=($(cat piaNetTest.trusted|xargs))
+	TRUSTEDNETS=("${(@f)$(cat piaNetTest.trusted)}")
 else
 	echo $(/bin/date)
 	echo "WARNING:  Must have a list of trusted networks provided in the file"
@@ -109,7 +109,7 @@ else
 			# Find out if we're on a trusted net.
 			for i in "${TRUSTEDNETS[@]}"
 			do
-				if [[ $i == $CURRENTNET ]]; then
+				if [[ "$i" == $CURRENTNET ]]; then
 					ONTRUSTEDNET=1
 					break
 				fi
