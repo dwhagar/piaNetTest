@@ -7,13 +7,13 @@
 		<key>HOME</key>
 		<string>/Users/cyclops</string>
 		<key>PATH</key>
-		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Applications/Keybase.app/Contents/SharedSupport/bin</string>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
 	</dict>
 	<key>Label</key>
 	<string>piaNetTest</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/bin/bash</string>
+		<string>/bin/zsh</string>
 		<string>/Users/cyclops/Library/Mobile Documents/com~apple~CloudDocs/Scripts/piaNetTest.sh</string>
 	</array>
 	<key>RunAtLoad</key>
