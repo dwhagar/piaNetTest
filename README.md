@@ -10,8 +10,7 @@ This requires the latest version of the Private Internet Access VPN client and i
 The plist file for launchd is setup for my system and thus needs to be changed, I recommend putting the script in its own folder somewhere that your user account can write to that folder and then setting the working directory accordingly.  It is possible to put the script anywhere and use `~/.config` or some other standard for placing the needed files.
 
 ### PLIST File
-
-This file is needed for launchd to execute the script on a regular basis.  The configuration does not execute the script upon loading, it'll wait 5 minutes and then execute every 5 minutes there after.
+This file is needed for launchd to execute the script on a regular basis.  The configuration does not execute the script upon loading, it'll wait 5 minutes and then execute every 5 minutes there after.  There are a lot of limitations of launchd, and perhaps chron would be a better way to do this.  I don't want to use cron because ASFAIK command in cron run even if you're not logged in and PIA won't accept commands if not logged in without changing to background mode.  Even then, it would saddle any other user on the system with PIA and no way to control it.  I just don't think it's a great option.  I really don't care for the fact that launchd won't allow Globbing anymore and thus the `~` can't be processed into a users HOME directory anymore.  I could change things to be in `/usr/local` but that's now how my system is setup and I'd have to write a sample launchd.  I'm just too lazy for that.
 
 Anyone using this should change the **environment variables** to reflect their desired path arguments and home directory.  I've tried to use direct paths to programs wherever possible so it might be possible to omit them entirely.  I don't believe I rely on the HOME variable at all either.  They are included because that's the default template I use.
 
