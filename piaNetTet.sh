@@ -5,6 +5,23 @@ set -eo pipefail
 # TODO:  This script currently only cares about WiFi, should put effort into
 #        making it work for a wired network as well, just not sure how.
 
+# A list of networks where PIA is not required.
+# This file is required!  It is in the format of one network name per line
+# space in network names are not (yet) supported.
+if [[ -f piaNetTest.trusted ]]; then
+	TRUSTEDNETS=($(cat piaNetTest.trusted|xargs))
+else
+	echo $(/bin/date)
+	echo "WARNING:  Must have a list of trusted networks provided in the file"
+	echo "          piaNetTest.trusted or all networks will be untrusted.  To"
+	echo "          remove this warning create an empty file named"
+	echo "          piaNetTest.trusted which will serve the same purpose as no"
+	echo "          file at all."
+fi
+
+# As a side-nite this script isn't really designed for having no trusted
+# networks and thus this could introduce a bug, it has not been tested.
+
 # How do we tell we are online?
 PINGTARGET=8.8.8.8
 PINGCMD="/sbin/ping -c 1 $PINGTARGET"
@@ -16,9 +33,6 @@ PIAREGION=auto
 
 # How do we tell what we're connected to?
 AIRPORTCMD=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport
-
-# A list of networks where PIA is not required.
-TRUSTEDNETS=(Stedding Stedding-5G Janduin Sulin)
 
 # Read last network state.
 if [[ -f "piaNetTest.data" ]]; then
