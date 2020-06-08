@@ -1,10 +1,65 @@
 # piaNetTest
 Automatically test the network status of a Mac and either connect or disconnect PIA automatically.
 
+## Requirements
+
 This requires the latest version of the Private Internet Access VPN client and is meant as mostly an example / proof of concept.  It does work on my system but that is no gaurentee it will work on your system.
 
-Read through variables for both files to customize to your own liking.
+## Customization
 
-I made this for myself and not for anyone else.  The only reason I'm posting it here is so that others may have an easier time solving this particular problem.
+The plist file for launchd is setup for my system and thus needs to be changed, I recommend putting the script in its own folder somewhere that your user account can write to that folder and then setting the working directory accordingly.  It is possible to put the script anywhere and use `~/.config` or some other standard for placing the needed files.
 
-As a side-note, I know that Mac's use ZSH currently and perhaps I should use that as the interpreter.  My default is BASH through so I used that.  It might work fine in ZSH but I haven't tried.
+### PLIST File
+
+This file is needed for launchd to execute the script on a regular basis.  The configuration does not execute the script upon loading, it'll wait 5 minutes and then execute every 5 minutes there after.
+
+Anyone using this should change the **environment variables** to reflect their desired path arguments and home directory.  I've tried to use direct paths to programs wherever possible so it might be possible to omit them entirely.  I don't believe I rely on the HOME variable at all either.  They are included because that's the default template I use.
+
+The snippet below shows what should be customized for environment variables.
+```
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HOME</key>
+		<string>/Users/cyclops</string>
+		<key>PATH</key>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Applications/Keybase.app/Contents/SharedSupport/bin</string>
+	</dict>
+ ```
+
+The script's **location** and **working directory** will also need to be set.  I have a bit of a strange setup where I keep my scripts synced to iCloud, which is why the scripts location is strange.
+```
+	<array>
+		<string>/bin/zsh</string>
+		<string>/Users/cyclops/Library/Mobile Documents/com~apple~CloudDocs/Scripts/piaNetTest.sh</string>
+	</array>
+```
+
+Now the script does give output when something changes.  The **standard out** and **standard error** log files are set to dump into my `~/Library/Log` directory.  It isn't much text but it can be helpful for diagnosing issues with execution.  This will also need to be set to wherever you want the files to go.  As far as I know, I can't use the standard `~` to represent my home directory and make all this easier so I just set it explicitely.
+```
+	<key>StandardErrorPath</key>
+	<string>/Users/cyclops/Library/Logs/piaNetTest.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/cyclops/Library/Logs/piaNetTest.log</string>
+```
+
+Finally the **working directory** is going to be where the script expects to read and write to files it needs.  In particular there is the `piaNetTest.data` and `piaNetTest.trusted` files.  The first stores what the last change in network showed for a network name.  This is used to determine if further checks are needed.  The second stores the list of network names which are trusted, one per line.
+```
+	<key>WorkingDirectory</key>
+	<string>/Users/cyclops/Library/Mobile Documents/com~apple~CloudDocs/Scripts</string>
+```
+
+I've had a lot of trouble getting launchd to use nice things like `~/` to set directory locations.  I could use `$HOME` once in the script, but I don't.  Once the PLIST file is configured, it can pretty much just stay that way so I don't personally see it as a big deal.  The launchd service is a right pain in the butt even though it is the way Mac's do things.
+
+## Trusted Networks
+
+As I said before, the trusted networks are stored in the scripts working directory in a file called `piaNetTest.trusted`.  The script expects the file to exist!  Even if you don't trust anyone or anything, just create an empty file.  The script will run without that but it will spit out a warning every time until it finds that file.
+
+### Example
+```
+My-Network
+My-Network-5G
+iPhone-Hotspot
+en3
+```
+
+Now, in theory you can use a network name that has spaces in it.  I don't have any networks that I use with spaces in the names so I can't test it.  However, using zsh it should parse one network name per line with spaces so long as it doesn't have other control characters in it (such as quotes, backslashes, or similar).  I don't know this for sure so your milage may vary.
