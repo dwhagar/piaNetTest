@@ -5,20 +5,6 @@ set -eo pipefail
 # TODO:  This script currently only cares about WiFi, should put effort into
 #        making it work for a wired network as well, just not sure how.
 
-# A list of networks where PIA is not required.
-# This file is required!  It is in the format of one network name per line
-# space in network names are not (yet) supported.
-if [[ -f piaNetTest.trusted ]]; then
-	TRUSTEDNETS=($(cat piaNetTest.trusted|xargs))
-else
-	echo $(/bin/date)
-	echo "WARNING:  Must have a list of trusted networks provided in the file"
-	echo "          piaNetTest.trusted or all networks will be untrusted.  To"
-	echo "          remove this warning create an empty file named"
-	echo "          piaNetTest.trusted which will serve the same purpose as no"
-	echo "          file at all."
-fi
-
 # As a side-nite this script isn't really designed for having no trusted
 # networks and thus this could introduce a bug, it has not been tested.
 
@@ -40,6 +26,21 @@ if [[ -f "piaNetTest.data" ]]; then
 else
 	# If the file doesn't exist, create the empty variable.
 	LASTNET=""
+fi
+
+# A list of networks where PIA is not required.
+# This file is required!  It is in the format of one network name per line
+# space in network names are not (yet) supported.
+if [[ -f piaNetTest.trusted ]]; then
+	TRUSTEDNETS=($(cat piaNetTest.trusted|xargs))
+else
+	echo $(/bin/date)
+	echo "WARNING:  Must have a list of trusted networks provided in the file"
+	echo "          piaNetTest.trusted or all networks will be untrusted.  To"
+	echo "          remove this warning create an empty file named"
+	echo "          piaNetTest.trusted which will serve the same purpose as no"
+	echo "          file at all."
+	TRUSTEDNETS=()
 fi
 
 # Read the current network state.
@@ -70,19 +71,23 @@ else
 		fi
 	else
 		# Network is online.
-		ONTRUSTEDNET=0 # Stet this flag
+		ONTRUSTEDNET=0 # Stet this flag, assume no trusted networks.
 	
 		echo "The Internet is online and connected to $CURRENTNET."
-	
-		# Find out if we're on a trusted net.
-		for i in "${TRUSTEDNETS[@]}"
-		do
-			if [[ $i == $CURRENTNET ]]; then
-				ONTRUSTEDNET=1
-				break
-			fi
-		done
-	
+		
+		# If there are no trusted networks, this should not be done.
+		if [[ $TRUSTEDNETS != "" ]]; then
+			# Find out if we're on a trusted net.
+			for i in "${TRUSTEDNETS[@]}"
+			do
+				if [[ $i == $CURRENTNET ]]; then
+					ONTRUSTEDNET=1
+					break
+				fi
+			done
+		fi
+		
+		# Now decide what to do with PIA.
 		if (( $ONTRUSTEDNET > 0 )); then
 			if [[ $PIASTATUS == "Connected" ]]; then
 				echo "Current network is trusted, disconnecting from PIA."
