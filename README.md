@@ -22,7 +22,7 @@ The snippet below shows what should be customized for environment variables.
 		<key>HOME</key>
 		<string>/Users/cyclops</string>
 		<key>PATH</key>
-		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Applications/Keybase.app/Contents/SharedSupport/bin</string>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
 	</dict>
  ```
 
